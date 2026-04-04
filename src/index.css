@@ -1,0 +1,574 @@
+@import "tailwindcss";
+
+/* ===== Doctor Punk Font ===== */
+@font-face {
+  font-family: 'Doctor Punk';
+  src: url('/fonts/doctor-punk.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== Persona 5 Theme ===== */
+@theme {
+  --color-p5-black: #0a0a0a;
+  --color-p5-dark: #141414;
+  --color-p5-gray: #1a1a1a;
+  --color-p5-red: #ff0000;
+  --color-p5-red-dark: #cc0000;
+  --color-p5-white: #f5f5f0;
+  --color-p5-yellow: #ffd200;
+  --color-p5-muted: #888888;
+  --font-family-punk: "Doctor Punk", "Bebas Neue", sans-serif;
+  --font-family-bebas: "Bebas Neue", sans-serif;
+  --font-family-oswald: "Oswald", sans-serif;
+  --font-family-noto: "Noto Sans JP", sans-serif;
+}
+
+/* ===== Base ===== */
+::selection { background: #ff0000; color: #f5f5f0; }
+
+body {
+  font-family: var(--font-family-noto);
+  background: #0a0a0a;
+  color: #f5f5f0;
+  overflow-x: hidden;
+  margin: 0;
+  cursor: crosshair;
+}
+
+/* ===== HALFTONE OVERLAY ===== */
+.halftone {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999;
+  background-image: radial-gradient(circle, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* ===== DIAGONAL STRIPE BG ===== */
+.stripe-bg {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 40px,
+    rgba(255,0,0,.015) 40px, rgba(255,0,0,.015) 42px
+  );
+}
+
+/* ===== CURSOR DOT ===== */
+.cursor-dot {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: #ff0000;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+
+/* ===== LOADING SCREEN ===== */
+.loading-screen {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #ff0000; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  transition: clip-path .8s cubic-bezier(.77,0,.175,1);
+  clip-path: inset(0 0 0 0);
+}
+.loading-screen.hide {
+  clip-path: inset(0 0 0 100%);
+}
+.loading-text {
+  font-family: var(--font-family-punk);
+  font-size: clamp(3rem, 10vw, 8rem);
+  color: #0a0a0a;
+  letter-spacing: .08em;
+  animation: loadPulse .6s ease infinite alternate;
+}
+@keyframes loadPulse {
+  0% { transform: scale(1) skewX(-6deg); opacity: 1; }
+  100% { transform: scale(1.05) skewX(-6deg); opacity: .7; }
+}
+
+/* ===== MARQUEE ===== */
+.marquee {
+  overflow: hidden; white-space: nowrap;
+  padding: .8rem 0;
+  background: #ffd200;
+  transform: skewY(-1.5deg);
+  position: relative;
+  z-index: 2;
+}
+.marquee-inner {
+  display: inline-block;
+  animation: marqueeScroll 20s linear infinite;
+  font-family: var(--font-family-punk);
+  font-size: 1.3rem; letter-spacing: .2em;
+  color: #0a0a0a;
+}
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== NAV ===== */
+.p5-nav {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  mix-blend-mode: difference;
+}
+.p5-nav-logo {
+  font-family: var(--font-family-punk);
+  font-size: 2rem; letter-spacing: .1em;
+  color: #f5f5f0;
+  transform: skewX(-8deg);
+}
+.p5-nav-links {
+  display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0;
+}
+.p5-nav-links button {
+  font-family: var(--font-family-punk);
+  font-size: 1rem; letter-spacing: .15em;
+  text-transform: uppercase; color: #f5f5f0;
+  background: none; border: none; cursor: pointer;
+  position: relative; padding: .3rem 0;
+  transition: color .3s;
+}
+.p5-nav-links button::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 3px; background: #ff0000;
+  transition: width .3s cubic-bezier(.77,0,.175,1);
+  transform: skewX(-15deg);
+}
+.p5-nav-links button:hover { color: #ff0000; }
+.p5-nav-links button:hover::after { width: 100%; }
+
+/* ========================================
+   P5 SECTION LABEL — Persona 5 Official Style
+   斜めだけど読みやすい大胆タイポグラフィ
+   ======================================== */
+.p5-section-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0;
+}
+
+/* 黒い背景プレート（斜めカット） */
+.p5-section-title .title-plate {
+  display: inline-block;
+  background: #0a0a0a;
+  padding: .2em .8em .2em .6em;
+  transform: skewX(-10deg);
+  position: relative;
+  border: 3px solid #ff0000;
+  box-shadow: 6px 6px 0 #ff0000;
+}
+
+/* テキスト自体は逆skewで水平に戻す → 読みやすさ確保 */
+.p5-section-title .title-text {
+  display: inline-block;
+  transform: skewX(10deg);
+  font-family: var(--font-family-punk);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  letter-spacing: .08em;
+  color: #f5f5f0;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #ff0000;
+}
+
+/* 赤い装飾バー（左） */
+.p5-section-title::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 50%;
+  width: 10px; height: 110%;
+  background: #ff0000;
+  transform: translateY(-50%) skewX(-10deg);
+}
+
+/* ===== P5 RED JAGGED LINES — 公式サイト風の赤いギザギザライン ===== */
+
+/* 横方向ジャグドライン */
+.p5-jagged-line {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.p5-jagged-line svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* アニメーション付きジャグドライン（左からスライドイン） */
+.p5-jagged-animated {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+.p5-jagged-animated svg {
+  width: 200%;
+  height: 100%;
+  animation: jaggedSlide 3s ease-in-out infinite alternate;
+}
+@keyframes jaggedSlide {
+  0% { transform: translateX(-25%); }
+  100% { transform: translateX(0%); }
+}
+
+/* 角の装飾（赤い三角・星） */
+.p5-corner-star {
+  position: absolute;
+  width: 24px; height: 24px;
+  z-index: 5;
+}
+.p5-corner-star svg { width: 100%; height: 100%; }
+
+/* セクション区切りの赤い稲妻ライン */
+.p5-divider {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* 赤い装飾フレーム */
+.p5-red-frame {
+  position: relative;
+  border: 3px solid #ff0000;
+  background: #141414;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 20px) 0,
+    100% 20px,
+    100% 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+}
+.p5-red-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+  background: #ff0000;
+  z-index: 2;
+}
+.p5-red-frame::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 8px,
+    rgba(255,0,0,.03) 8px, rgba(255,0,0,.03) 10px
+  );
+  pointer-events: none;
+}
+
+/* ===== FullCalendar Overrides ===== */
+.fc {
+  --fc-border-color: #2a2a2a;
+  --fc-button-bg-color: #ff0000;
+  --fc-button-border-color: #ff0000;
+  --fc-button-hover-bg-color: #cc0000;
+  --fc-button-hover-border-color: #cc0000;
+  --fc-button-active-bg-color: #cc0000;
+  --fc-button-active-border-color: #cc0000;
+  --fc-today-bg-color: rgba(255, 0, 0, 0.06);
+  --fc-event-bg-color: #ff0000;
+  --fc-event-border-color: #ff0000;
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: #141414;
+  --fc-list-event-hover-bg-color: #1a1a1a;
+}
+
+/* カレンダーのタイトル（2026年4月）→ Doctor Punk + P5スタイル */
+.fc .fc-toolbar-title {
+  font-family: var(--font-family-punk) !important;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #f5f5f0;
+  position: relative;
+  display: inline-block;
+  padding: .1em .4em;
+  background: #0a0a0a;
+  border: 2px solid #ff0000;
+  transform: skewX(-8deg);
+  box-shadow: 4px 4px 0 #ff0000;
+}
+
+.fc .fc-button {
+  font-family: var(--font-family-punk) !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 0 !important;
+  font-size: .95rem !important;
+  transform: skewX(-5deg);
+  transition: all .3s cubic-bezier(.16,1,.3,1) !important;
+}
+.fc .fc-button:hover {
+  transform: skewX(-5deg) scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, .4);
+}
+
+/* 曜日ヘッダー */
+.fc .fc-col-header-cell {
+  background: #141414;
+  font-family: var(--font-family-punk);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  border-bottom: 3px solid #ff0000 !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: #f5f5f0 !important;
+  text-decoration: none !important;
+  font-size: 1.1rem;
+}
+.fc .fc-daygrid-day-number {
+  color: #f5f5f0 !important;
+  text-decoration: none !important;
+  font-family: var(--font-family-punk);
+  font-size: 1.1rem;
+}
+
+.fc .fc-daygrid-day {
+  background: transparent;
+  transition: all .2s;
+}
+.fc .fc-daygrid-day:hover {
+  background: rgba(255, 0, 0, .06);
+}
+.fc .fc-day-today {
+  background: rgba(255, 0, 0, .1) !important;
+  box-shadow: inset 0 0 30px rgba(255, 0, 0, .08);
+}
+/* 今日の日付番号を強調 */
+.fc .fc-day-today .fc-daygrid-day-number {
+  color: #ff0000 !important;
+  text-shadow: 0 0 8px rgba(255,0,0,.5);
+}
+
+.fc .fc-event {
+  border-radius: 0 !important;
+  border-left: 4px solid #ffd200 !important;
+  font-weight: 700;
+  cursor: pointer;
+  transform: skewX(-2deg);
+  transition: all .2s;
+}
+.fc .fc-event:hover {
+  transform: skewX(0deg) scale(1.03);
+  box-shadow: 4px 4px 0 rgba(255, 0, 0, .3);
+}
+
+.fc .fc-scrollgrid {
+  border: none !important;
+}
+.fc th, .fc td {
+  border-color: #2a2a2a !important;
+}
+
+/* Calendar wrapper */
+.calendar-wrapper {
+  position: relative;
+  background: #141414;
+  border: 3px solid #ff0000;
+  padding: 1.5rem;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 20px) 0,
+    100% 20px,
+    100% 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+  box-shadow: 6px 6px 0 rgba(255, 0, 0, .25);
+}
+.calendar-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 5px; height: 100%;
+  background: #ff0000;
+  z-index: 2;
+}
+
+/* ===== P5 Animations ===== */
+@keyframes p5-slide-in {
+  from { transform: translateX(-60px) skewX(-5deg); opacity: 0; }
+  to { transform: translateX(0) skewX(0); opacity: 1; }
+}
+@keyframes p5-slide-in-right {
+  from { transform: translateX(60px) skewX(5deg); opacity: 0; }
+  to { transform: translateX(0) skewX(0); opacity: 1; }
+}
+@keyframes p5-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes p5-cut-in {
+  from { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+@keyframes p5-fade-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.p5-slide-in {
+  animation: p5-slide-in .6s cubic-bezier(.16,1,.3,1) both;
+}
+.p5-slide-in-right {
+  animation: p5-slide-in-right .6s cubic-bezier(.16,1,.3,1) both;
+}
+.p5-cut-in {
+  animation: p5-cut-in .6s cubic-bezier(.16,1,.3,1) both;
+}
+.p5-fade-up {
+  animation: p5-fade-up .5s ease-out both;
+}
+
+/* ===== Task Card ===== */
+.task-card {
+  position: relative;
+  background: #0a0a0a;
+  border: 2px solid #2a2a2a;
+  padding: 0;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  transition: all .4s cubic-bezier(.16,1,.3,1);
+}
+.task-card:hover {
+  border-color: #ff0000;
+  transform: translateX(6px);
+  box-shadow: -4px 4px 0 rgba(255, 0, 0, .3);
+}
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 4px; height: 100%;
+  background: #ff0000;
+  transform: scaleY(0); transform-origin: top;
+  transition: transform .4s cubic-bezier(.16,1,.3,1);
+}
+.task-card:hover::before { transform: scaleY(1); }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .85);
+  backdrop-filter: blur(4px);
+}
+.modal-panel {
+  background: #141414;
+  border: 3px solid #ff0000;
+  position: relative;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 20px) 0,
+    100% 20px,
+    100% 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+  box-shadow: 8px 8px 0 rgba(255, 0, 0, .3);
+}
+.modal-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 5px; height: 100%;
+  background: #ff0000;
+  z-index: 2;
+}
+.modal-panel::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 8px,
+    rgba(255,0,0,.02) 8px, rgba(255,0,0,.02) 10px
+  );
+  pointer-events: none;
+}
+
+/* ===== P5 Input ===== */
+.p5-input {
+  background: #0a0a0a;
+  border: none;
+  border-left: 4px solid #ffd200;
+  padding: .8rem 1rem;
+  color: #f5f5f0;
+  font-family: var(--font-family-oswald);
+  font-size: .95rem;
+  letter-spacing: .05em;
+  transform: skewX(-3deg);
+  outline: none;
+  transition: border-color .3s, box-shadow .3s;
+  width: 100%;
+}
+.p5-input:focus {
+  border-left-color: #f5f5f0;
+  box-shadow: 0 0 15px rgba(255, 0, 0, .15);
+}
+
+/* ===== P5 Button ===== */
+.p5-btn {
+  font-family: var(--font-family-punk);
+  font-size: 1.2rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: #ff0000;
+  color: #f5f5f0;
+  border: none;
+  padding: .8rem 2rem;
+  cursor: pointer;
+  transform: skewX(-8deg);
+  position: relative;
+  overflow: hidden;
+  transition: color .3s, transform .2s;
+}
+.p5-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: #ffd200;
+  transition: left .4s cubic-bezier(.16,1,.3,1);
+  z-index: 0;
+}
+.p5-btn:hover {
+  color: #0a0a0a;
+  transform: skewX(-8deg) scale(1.03);
+}
+.p5-btn:hover::before { left: 0; }
+.p5-btn span { position: relative; z-index: 1; }
+
+.p5-btn-danger {
+  background: #1a1a1a;
+  border: 2px solid #ff0000;
+  color: #ff0000;
+}
+.p5-btn-danger::before { background: #ff0000; }
+.p5-btn-danger:hover { color: #f5f5f0; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #ff0000; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .p5-nav { padding: .8rem 1rem; }
+  .p5-nav-links { display: none; }
+}

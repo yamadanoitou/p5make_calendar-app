@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<p>Right-click each canvas below and "Save image as" to create the PWA icons:</p>
+<h3>192x192</h3>
+<canvas id="c192" width="192" height="192"></canvas>
+<h3>512x512</h3>
+<canvas id="c512" width="512" height="512"></canvas>
+<script>
+function draw(canvas) {
+  const s = canvas.width;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, s, s);
+  // Red parallelogram
+  const grad = ctx.createLinearGradient(0, 0, s, s);
+  grad.addColorStop(0, '#e5001a');
+  grad.addColorStop(1, '#b3001a');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(s*0.1, s*0.08);
+  ctx.lineTo(s*0.95, s*0.08);
+  ctx.lineTo(s*0.9, s*0.92);
+  ctx.lineTo(s*0.05, s*0.92);
+  ctx.closePath();
+  ctx.fill();
+  // Text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `900 italic ${s*0.45}px "Arial Black", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('P5', s*0.5, s*0.52);
+}
+draw(document.getElementById('c192'));
+draw(document.getElementById('c512'));
+</script>
+</body>
+</html>
