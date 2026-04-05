@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../lib/auth'
 import type { Event } from '../types/database'
 
 interface EventModalProps {
@@ -21,6 +22,7 @@ const COLOR_OPTIONS = [
 ]
 
 export default function EventModal({ isOpen, onClose, onSaved, event, defaultStart, defaultEnd }: EventModalProps) {
+  const { user } = useAuth()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [startAt, setStartAt] = useState('')
@@ -67,7 +69,7 @@ export default function EventModal({ isOpen, onClose, onSaved, event, defaultSta
     if (event) {
       await supabase.from('events').update(payload).eq('id', event.id)
     } else {
-      await supabase.from('events').insert(payload)
+      await supabase.from('events').insert({ ...payload, user_id: user!.id })
     }
 
     setSaving(false)

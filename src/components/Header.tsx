@@ -1,3 +1,5 @@
+import { useAuth } from '../lib/auth'
+
 interface HeaderProps {
   onNotificationToggle: () => void
   notificationEnabled: boolean
@@ -6,6 +8,8 @@ interface HeaderProps {
 }
 
 export default function Header({ onNotificationToggle, notificationEnabled, activeTab, onTabChange }: HeaderProps) {
+  const { signOut } = useAuth()
+
   return (
     <nav className="p5-nav">
       {/* Logo */}
@@ -32,6 +36,11 @@ export default function Header({ onNotificationToggle, notificationEnabled, acti
         <li>
           <button onClick={onNotificationToggle}>
             {notificationEnabled ? 'NOTIF:ON' : 'NOTIF:OFF'}
+          </button>
+        </li>
+        <li>
+          <button onClick={signOut}>
+            LOGOUT
           </button>
         </li>
       </ul>

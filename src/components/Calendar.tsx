@@ -6,6 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import type { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core'
 import type { EventResizeDoneArg } from '@fullcalendar/interaction'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../lib/auth'
 import type { Event } from '../types/database'
 import { P5Star } from './P5JaggedLines'
 
@@ -16,6 +17,7 @@ interface CalendarProps {
 }
 
 export default function Calendar({ onEventClick, onDateSelect, refreshKey }: CalendarProps) {
+  const { user } = useAuth()
   const [events, setEvents] = useState<Event[]>([])
   const calendarRef = useRef<FullCalendar>(null)
 
@@ -23,6 +25,7 @@ export default function Calendar({ onEventClick, onDateSelect, refreshKey }: Cal
     const { data } = await supabase
       .from('events')
       .select('*')
+      .eq('user_id', user!.id)
       .order('start_at', { ascending: true })
     if (data) setEvents(data)
   }

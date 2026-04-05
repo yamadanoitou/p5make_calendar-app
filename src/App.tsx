@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import LoadingScreen from './components/LoadingScreen'
+import LoginScreen from './components/LoginScreen'
 import CursorDot from './components/CursorDot'
 import Marquee from './components/Marquee'
 import Header from './components/Header'
@@ -9,10 +10,12 @@ import TaskPanel from './components/TaskPanel'
 import { JaggedDivider, RedSlashAccent, JaggedBorderTop, P5Star } from './components/P5JaggedLines'
 import { requestNotificationPermission, scheduleReminder, isNotificationSupported } from './lib/notifications'
 import { supabase } from './lib/supabase'
+import { useAuth } from './lib/auth'
 import type { Event } from './types/database'
 import './index.css'
 
-export default function App() {
+function AuthenticatedApp() {
+  const { user, signOut } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [defaultStart, setDefaultStart] = useState<string>()
@@ -24,19 +27,20 @@ export default function App() {
   const refresh = useCallback(() => setRefreshKey(k => k + 1), [])
 
   useEffect(() => {
-    if (!notificationEnabled) return
+    if (!notificationEnabled || !user) return
     const scheduleAll = async () => {
       const now = new Date().toISOString()
       const { data: events } = await supabase
         .from('events')
         .select('*')
+        .eq('user_id', user.id)
         .gte('start_at', now)
         .order('start_at', { ascending: true })
         .limit(20)
       events?.forEach(ev => { scheduleReminder(ev.title, ev.start_at) })
     }
     scheduleAll()
-  }, [notificationEnabled, refreshKey])
+  }, [notificationEnabled, refreshKey, user])
 
   const handleNotificationToggle = async () => {
     if (!isNotificationSupported()) {
@@ -125,6 +129,25 @@ export default function App() {
       <JaggedBorderTop />
       <RedSlashAccent />
 
+      {/* Mobile Tab Bar */}
+      <div className="mobile-tab-bar">
+        <button
+          className={activeTab === 'calendar' ? 'active' : ''}
+          onClick={() => setActiveTab('calendar')}
+        >
+          Calendar
+        </button>
+        <button
+          className={activeTab === 'tasks' ? 'active' : ''}
+          onClick={() => setActiveTab('tasks')}
+        >
+          Tasks
+        </button>
+        <button onClick={signOut}>
+          Logout
+        </button>
+      </div>
+
       {/* Floating Add Button */}
       <button
         onClick={() => {
@@ -133,7 +156,7 @@ export default function App() {
           setDefaultEnd(undefined)
           setModalOpen(true)
         }}
-        className="fixed bottom-8 right-8 z-40 w-16 h-16 text-3xl font-bold flex items-center justify-center transition-all"
+        className="fab-button fixed bottom-8 right-8 z-40 w-16 h-16 text-3xl font-bold flex items-center justify-center transition-all"
         style={{
           background: '#ff0000',
           color: '#f5f5f0',
@@ -179,4 +202,13 @@ export default function App() {
       />
     </div>
   )
+}
+
+export default function App() {
+  const { user, loading } = useAuth()
+
+  if (loading) return <LoadingScreen />
+  if (!user) return <LoginScreen />
+
+  return <AuthenticatedApp />
 }

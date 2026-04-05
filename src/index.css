@@ -339,8 +339,10 @@ body {
 .fc .fc-daygrid-day-number {
   color: #f5f5f0 !important;
   text-decoration: none !important;
-  font-family: var(--font-family-punk);
-  font-size: 1.1rem;
+  font-family: var(--font-family-oswald);
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 6px 10px !important;
 }
 
 .fc .fc-daygrid-day {
@@ -567,8 +569,39 @@ body {
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #ff0000; }
 
+/* ===== Mobile Tab Bar ===== */
+.mobile-tab-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; z-index: 1000;
+  background: #0a0a0a;
+  border-top: 3px solid #ff0000;
+  padding: 0;
+}
+.mobile-tab-bar button {
+  flex: 1;
+  padding: .8rem 0;
+  font-family: var(--font-family-punk);
+  font-size: 1rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color .3s, background .3s;
+}
+.mobile-tab-bar button.active {
+  color: #f5f5f0;
+  background: #ff0000;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .p5-nav { padding: .8rem 1rem; }
   .p5-nav-links { display: none; }
+  .mobile-tab-bar { display: flex; }
+  /* FABを少し上にずらしてタブバーと被らないようにする */
+  .fab-button { bottom: 80px !important; }
 }

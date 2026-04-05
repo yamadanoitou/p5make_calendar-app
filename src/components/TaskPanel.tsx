@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../lib/auth'
 import type { Task } from '../types/database'
 import { P5Star } from './P5JaggedLines'
 
@@ -7,6 +8,7 @@ const PRIORITY_LABELS = ['LOW', 'MID', 'HIGH'] as const
 const PRIORITY_COLORS = ['#888', '#ffd200', '#ff0000'] as const
 
 export default function TaskPanel() {
+  const { user } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTitle, setNewTitle] = useState('')
   const [newPriority, setNewPriority] = useState(0)
@@ -16,6 +18,7 @@ export default function TaskPanel() {
     const { data } = await supabase
       .from('tasks')
       .select('*')
+      .eq('user_id', user!.id)
       .order('is_completed', { ascending: true })
       .order('priority', { ascending: false })
       .order('created_at', { ascending: false })
@@ -32,6 +35,7 @@ export default function TaskPanel() {
     await supabase.from('tasks').insert({
       title: newTitle.trim(),
       priority: newPriority,
+      user_id: user!.id,
     })
     setNewTitle('')
     setNewPriority(0)

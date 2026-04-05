@@ -4,6 +4,7 @@ export interface Database {
       events: {
         Row: {
           id: string
+          user_id: string
           title: string
           description: string | null
           start_at: string
@@ -13,6 +14,7 @@ export interface Database {
         }
         Insert: {
           id?: string
+          user_id: string
           title: string
           description?: string | null
           start_at: string
@@ -22,6 +24,7 @@ export interface Database {
         }
         Update: {
           id?: string
+          user_id?: string
           title?: string
           description?: string | null
           start_at?: string
@@ -34,6 +37,7 @@ export interface Database {
       tasks: {
         Row: {
           id: string
+          user_id: string
           title: string
           due_date: string | null
           is_completed: boolean
@@ -42,6 +46,7 @@ export interface Database {
         }
         Insert: {
           id?: string
+          user_id: string
           title: string
           due_date?: string | null
           is_completed?: boolean
@@ -50,6 +55,7 @@ export interface Database {
         }
         Update: {
           id?: string
+          user_id?: string
           title?: string
           due_date?: string | null
           is_completed?: boolean
